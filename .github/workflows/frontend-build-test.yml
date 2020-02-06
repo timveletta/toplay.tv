@@ -18,25 +18,28 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Build lobby
-      - run: cd ./frontend/lobby
-      - run: npm install
-      - run: npm test
-      - run: npm run build
+        run: |
+          cd ./frontend/lobby
+          npm ci
+          npm test
+          npm run build
         env:
           CI: true
 
       - name: Build 2r1b
-      - run: cd ../2r1b
-      - run: npm install
-      - run: npm test
-      - run: npm run build
+        run: |
+          cd ./frontend/lobby
+          npm ci
+          npm test
+          npm run build
         env:
           CI: true
 
       - name: Build main
-      - run: cd ../main
-      - run: npm install
-      - run: npm test
-      - run: npm run build
+        run: |
+          cd ./frontend/lobby
+          npm ci
+          npm test
+          npm run build
         env:
           CI: true
