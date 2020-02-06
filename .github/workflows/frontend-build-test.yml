@@ -21,7 +21,6 @@ jobs:
         run: |
           cd ./frontend/lobby
           npm ci
-          npm test
           npm run build
         env:
           CI: true
@@ -30,7 +29,6 @@ jobs:
         run: |
           cd ./frontend/lobby
           npm ci
-          npm test
           npm run build
         env:
           CI: true
@@ -39,7 +37,6 @@ jobs:
         run: |
           cd ./frontend/lobby
           npm ci
-          npm test
           npm run build
         env:
           CI: true
