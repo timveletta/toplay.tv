@@ -27,7 +27,7 @@ jobs:
 
       - name: Build 2r1b
         run: |
-          cd ./frontend/lobby
+          cd ./frontend/2r1b
           npm ci
           npm run build
         env:
@@ -35,7 +35,7 @@ jobs:
 
       - name: Build main
         run: |
-          cd ./frontend/lobby
+          cd ./frontend/main
           npm ci
           npm run build
         env:
