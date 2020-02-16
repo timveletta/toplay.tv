@@ -37,12 +37,12 @@ jobs:
           cd ./frontend/main
           npm ci
           npm run build
-        
 
   deploy:
     runs-on: ubuntu-latest
 
-    - name: Configure AWS Credentials
+    steps:
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
