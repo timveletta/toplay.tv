@@ -1,0 +1,20 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  ToPlayTV Infrastructure - Main
+
+Parameters:
+  WebsiteBucketName:
+    Type: String
+  BucketRegion:
+    Type: String
+    Default: "ap-southeast-2"
+
+Resources:
+  WebsiteContentBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${WebsiteBucketName}"
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html

@@ -6,6 +6,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      CI: true
+
     strategy:
       matrix:
         node-version: [12.x]
@@ -22,21 +25,30 @@ jobs:
           cd ./frontend/lobby
           npm ci
           npm run build
-        env:
-          CI: true
 
       - name: Build 2r1b
         run: |
           cd ./frontend/2r1b
           npm ci
           npm run build
-        env:
-          CI: true
 
       - name: Build main
         run: |
           cd ./frontend/main
           npm ci
           npm run build
-        env:
-          CI: true
+        
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-2
+
+      - name: Deploy to S3 Bucket
+        run: |
+          aws s3 sync ./frontend/main/build s3://toplay-tv
