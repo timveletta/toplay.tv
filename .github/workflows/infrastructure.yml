@@ -18,4 +18,4 @@ jobs:
 
       - name: Deploy infrastructure
         run: |
-          aws cloudformation update-stack --stack-name toplay-tv --template-file file://infrastructure/main.yaml --parameters file://infrastructure/main.json
+          aws cloudformation update-stack --stack-name toplay-tv --template-body file://infrastructure/main.yaml --parameters file://infrastructure/main.json
