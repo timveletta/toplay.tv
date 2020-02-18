@@ -21,7 +21,10 @@
     "typescript": "~3.7.2"
   },
   "dependencies": {
+    "@aws-cdk/aws-appsync": "^1.24.0",
     "@aws-cdk/aws-cloudfront": "^1.24.0",
+    "@aws-cdk/aws-dynamodb": "^1.24.0",
+    "@aws-cdk/aws-iam": "^1.24.0",
     "@aws-cdk/aws-s3": "^1.24.0",
     "@aws-cdk/core": "1.24.0",
     "source-map-support": "^0.5.16"

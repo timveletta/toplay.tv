@@ -6,6 +6,8 @@ export class FrontendStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // TODO include deployment role in here
+
     const oai = new cloudfront.OriginAccessIdentity(this, "OAI");
     const siteBucket = new s3.Bucket(this, "FrontendSiteBucket", {
       bucketName: "toplay-tv",

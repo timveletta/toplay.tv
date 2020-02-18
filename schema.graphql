@@ -1,0 +1,24 @@
+enum GameStatus {
+    LOBBY
+    INGAME
+    COMPLETE
+}
+
+enum GameType {
+    TWOROOMSONEBOOM
+}
+
+type Game {
+    code: String!
+    createdAt: Number
+    status: GameStatus!
+    type: GameType!
+}
+
+type Query {
+    getGame(code: String!): Game!
+}
+
+type Mutation {
+    createGame(): Game!
+}
