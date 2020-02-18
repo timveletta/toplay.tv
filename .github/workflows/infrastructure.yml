@@ -16,6 +16,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-southeast-2
 
-      - name: Deploy infrastructure
+      - name: Build and deploy infrastructure
         run: |
-          aws cloudformation update-stack --stack-name toplay-tv --template-file file://infrastructure/main.yaml --parameters file://infrastructure/main.json
+          cd ./infrastructure
+          npm ci
+          npm run build
+          cdk synth
+          cdk deploy
