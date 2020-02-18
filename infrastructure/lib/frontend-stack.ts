@@ -6,11 +6,29 @@ export class FrontendStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    const oai = new cloudfront.OriginAccessIdentity(this, "OAI");
     const siteBucket = new s3.Bucket(this, "FrontendSiteBucket", {
       bucketName: "toplay-tv",
       websiteIndexDocument: "index.html",
       websiteErrorDocument: "index.html",
-      publicReadAccess: true
+      publicReadAccess: false
     });
+    siteBucket.grantRead(oai);
+
+    new cloudfront.CloudFrontWebDistribution(
+      this,
+      "FrontendHostingDistribution",
+      {
+        originConfigs: [
+          {
+            s3OriginSource: {
+              s3BucketSource: siteBucket,
+              originAccessIdentity: oai
+            },
+            behaviors: [{ isDefaultBehavior: true }]
+          }
+        ]
+      }
+    );
   }
 }
