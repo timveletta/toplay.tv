@@ -8,7 +8,6 @@ jobs:
 
     env:
       CI: true
-      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
     strategy:
       matrix:
@@ -21,23 +20,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Build lobby
+      - name: Build frontend
         run: |
-          cd ./frontend/lobby
-          npm ci
-          npm run build
-          npm publish
-
-      - name: Build 2r1b
-        run: |
-          cd ./frontend/2r1b
-          npm ci
-          npm run build
-          npm publish
-
-      - name: Build main
-        run: |
-          cd ./frontend/main
+          cd ./frontend
           npm ci
           npm run build
 
@@ -50,4 +35,4 @@ jobs:
 
       - name: Deploy to S3 Bucket
         run: |
-          aws s3 sync ./frontend/main/build s3://toplay-tv
+          aws s3 sync ./frontend/build s3://toplay-tv

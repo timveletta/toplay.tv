@@ -1,16 +1,14 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import Lobby from "@toplay/lobby";
-import TwoRoomsOneBoom from "@toplay/2r1b";
+import React from 'react';
+import logo from './logo.svg';
+import './App.css';
 
-const App = () => {
+function App() {
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.tsx</code> and save to reload.
+          Edit <code>src/App.js</code> and save to reload.
         </p>
         <a
           className="App-link"
@@ -20,11 +18,9 @@ const App = () => {
         >
           Learn React
         </a>
-        <Lobby />
-        <TwoRoomsOneBoom />
       </header>
     </div>
   );
-};
+}
 
 export default App;
