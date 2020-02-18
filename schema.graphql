@@ -1,24 +1,24 @@
 enum GameStatus {
-    LOBBY
-    INGAME
-    COMPLETE
+  LOBBY
+  INGAME
+  COMPLETE
 }
 
 enum GameType {
-    TWOROOMSONEBOOM
+  TWOROOMSONEBOOM
 }
 
 type Game {
-    code: String!
-    createdAt: Number
-    status: GameStatus!
-    type: GameType!
+  code: String!
+  createdAt: Int
+  status: GameStatus!
+  type: GameType!
 }
 
 type Query {
-    getGame(code: String!): Game!
+  getGame(code: String!): Game!
 }
 
 type Mutation {
-    createGame(): Game!
+  createGame: Game!
 }
