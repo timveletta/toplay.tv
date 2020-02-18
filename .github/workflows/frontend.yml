@@ -8,6 +8,7 @@ jobs:
 
     env:
       CI: true
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
     strategy:
       matrix:
@@ -25,12 +26,14 @@ jobs:
           cd ./frontend/lobby
           npm ci
           npm run build
+          npm publish
 
       - name: Build 2r1b
         run: |
           cd ./frontend/2r1b
           npm ci
           npm run build
+          npm publish
 
       - name: Build main
         run: |

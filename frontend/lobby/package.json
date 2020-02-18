@@ -3,6 +3,14 @@
   "version": "0.1.0",
   "main": "build/index.js",
   "types": "build/index.d.ts",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com:timveletta/toplay.tv.git",
+    "directory": "packages/lobby"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
