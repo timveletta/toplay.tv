@@ -22,4 +22,4 @@ jobs:
           npm ci
           npm run build
           npm run cdk synth
-          npm run cdk deploy ToPlayTv-Api ToPlayTv-Frontend
+          npm run cdk deploy API Frontend

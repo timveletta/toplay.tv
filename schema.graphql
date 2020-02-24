@@ -20,5 +20,5 @@ type Query {
 }
 
 type Mutation {
-  createGame: Game!
+  createGame(gameType: GameType!): Game!
 }
