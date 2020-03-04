@@ -16,7 +16,8 @@ exports.handler = async function(event) {
     code: generatedCode,
     createdAt: Math.round(new Date().getTime() / 1000),
     status: "LOBBY",
-    type: gameType
+    type: gameType,
+    players: []
   };
 
   const params = {
@@ -25,8 +26,6 @@ exports.handler = async function(event) {
   };
 
   await dynamoDb.put(params).promise();
-
-  console.log("returning", Item);
 
   return Item;
 };

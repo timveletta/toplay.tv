@@ -6,6 +6,12 @@ enum GameStatus {
 
 enum GameType {
   TWOROOMSONEBOOM
+  GALACTICCONQUEST
+}
+
+type Player {
+  id: ID!
+  name: String!
 }
 
 type Game {
@@ -13,6 +19,7 @@ type Game {
   createdAt: Int
   status: GameStatus!
   type: GameType!
+  players: [Player]
 }
 
 type Query {
@@ -21,4 +28,5 @@ type Query {
 
 type Mutation {
   createGame(gameType: GameType!): Game!
+  joinGame(code: String!, name: String!): Player!
 }

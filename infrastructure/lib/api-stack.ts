@@ -6,16 +6,22 @@ import * as DynamoDb from "@aws-cdk/aws-dynamodb";
 // this could be a repeatable stack to make it easy to create new apps
 
 export class ApiStack extends cdk.Stack {
+  gameTable: DynamoDb.Table;
+  graphQLApi: AppSync.GraphQLApi;
+
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const gameTable = new DynamoDb.Table(this, "GameTable", {
+    this.gameTable = new DynamoDb.Table(this, "GameTable", {
       tableName: "ToPlayTv-Games",
-      partitionKey: { name: "code", type: DynamoDb.AttributeType.STRING },
-      removalPolicy: cdk.RemovalPolicy.DESTROY
+      partitionKey: {
+        name: "code",
+        type: DynamoDb.AttributeType.STRING
+      },
+      billingMode: DynamoDb.BillingMode.PAY_PER_REQUEST
     });
 
-    const graphqlApi = new AppSync.GraphQLApi(this, "ToPlayTvApi", {
+    this.graphQLApi = new AppSync.GraphQLApi(this, "ToPlayTvApi", {
       name: "ToPlayTvApi",
       schemaDefinitionFile: "../schema.graphql",
       logConfig: {
@@ -23,23 +29,29 @@ export class ApiStack extends cdk.Stack {
       }
     });
 
-    const createGameLambda = new Lambda.Function(this, "CreateGameLambda", {
+    this.createLambdaResolver("createGame", "Mutation");
+    this.createLambdaResolver("joinGame", "Mutation");
+  }
+
+  createLambdaResolver(fieldName: string, type: "Mutation" | "Query") {
+    const lambda = new Lambda.Function(this, `${fieldName}Lambda`, {
       runtime: Lambda.Runtime.NODEJS_12_X,
-      code: Lambda.Code.asset("../functions/createGame"),
+      code: Lambda.Code.asset(`../functions/${fieldName}`),
       handler: "index.handler"
     });
-    gameTable.grantReadWriteData(createGameLambda);
+    this.gameTable.grantReadWriteData(lambda);
 
-    const createGameDs = graphqlApi.addLambdaDataSource(
-      "CreateGame",
+    const dataSource = this.graphQLApi.addLambdaDataSource(
+      fieldName,
       "",
-      createGameLambda
+      lambda
     );
-    createGameDs.createResolver({
-      typeName: "Mutation",
-      fieldName: "createGame",
+
+    dataSource.createResolver({
+      typeName: type,
+      fieldName: fieldName,
       requestMappingTemplate: AppSync.MappingTemplate.lambdaRequest(
-        "$util.toJson($ctx.args.input)"
+        "$util.toJson($ctx.args)"
       ),
       responseMappingTemplate: AppSync.MappingTemplate.lambdaResult()
     });
