@@ -1,5 +1,5 @@
 const AWS = require("aws-sdk");
-const uuidv4 = require("uuid").v4();
+const uuidv4 = require("uuid").v4;
 
 const TableName = "ToPlayTv-Games";
 
@@ -26,7 +26,8 @@ exports.handler = async function(event) {
       "#players": "players"
     },
     ExpressionAttributeValues: {
-      ":player": playerItem
+      ":player": [playerItem],
+      ":empty_list": []
     }
   };
 

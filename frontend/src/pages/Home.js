@@ -21,6 +21,7 @@ const Home = () => {
         Create Game
       </button>
       {data && <Redirect to={`lobby/${data.createGame.code}`} />}
+      {error && JSON.stringify(error)}
     </div>
   );
 };
