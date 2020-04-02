@@ -33,5 +33,8 @@ exports.handler = async function(event) {
 
   const updateResult = await dynamoDb.update(params).promise();
   console.log(updateResult);
-  return playerItem;
+  return {
+    ...playerItem,
+    code: gameCode
+  };
 };

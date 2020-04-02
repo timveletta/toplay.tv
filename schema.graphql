@@ -1,3 +1,11 @@
+type Game {
+  code: String!
+  createdAt: Int
+  status: GameStatus!
+  type: GameType!
+  players: [Player]
+}
+
 enum GameStatus {
   LOBBY
   INGAME
@@ -9,24 +17,27 @@ enum GameType {
   GALACTICCONQUEST
 }
 
+type Mutation {
+  createGame(gameType: GameType!): Game!
+  joinGame(code: String!, name: String!): Player!
+}
+
 type Player {
   id: ID!
   name: String!
-}
-
-type Game {
-  code: String!
-  createdAt: Int
-  status: GameStatus!
-  type: GameType!
-  players: [Player]
+  code: String
 }
 
 type Query {
   getGame(code: String!): Game!
 }
 
-type Mutation {
-  createGame(gameType: GameType!): Game!
-  joinGame(code: String!, name: String!): Player!
+type Subscription {
+  playerJoined(code: String!): Player @aws_subscribe(mutations: ["joinGame"])
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
 }
