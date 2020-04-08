@@ -16,28 +16,29 @@ export class ApiStack extends cdk.Stack {
       tableName: "ToPlayTv-Games",
       partitionKey: {
         name: "code",
-        type: DynamoDb.AttributeType.STRING
+        type: DynamoDb.AttributeType.STRING,
       },
-      billingMode: DynamoDb.BillingMode.PAY_PER_REQUEST
+      billingMode: DynamoDb.BillingMode.PAY_PER_REQUEST,
     });
 
     this.graphQLApi = new AppSync.GraphQLApi(this, "ToPlayTvApi", {
       name: "ToPlayTvApi",
       schemaDefinitionFile: "../schema.graphql",
       logConfig: {
-        fieldLogLevel: AppSync.FieldLogLevel.ALL
-      }
+        fieldLogLevel: AppSync.FieldLogLevel.ALL,
+      },
     });
 
     this.createLambdaResolver("createGame", "Mutation");
     this.createLambdaResolver("joinGame", "Mutation");
+    this.createLambdaResolver("getGame", "Query");
   }
 
   createLambdaResolver(fieldName: string, type: "Mutation" | "Query") {
     const lambda = new Lambda.Function(this, `${fieldName}Lambda`, {
       runtime: Lambda.Runtime.NODEJS_12_X,
-      code: Lambda.Code.asset(`../functions/${fieldName}`),
-      handler: "index.handler"
+      code: new Lambda.AssetCode(`../functions/${fieldName}`),
+      handler: "index.handler",
     });
     this.gameTable.grantReadWriteData(lambda);
 
@@ -53,7 +54,7 @@ export class ApiStack extends cdk.Stack {
       requestMappingTemplate: AppSync.MappingTemplate.lambdaRequest(
         "$util.toJson($ctx.args)"
       ),
-      responseMappingTemplate: AppSync.MappingTemplate.lambdaResult()
+      responseMappingTemplate: AppSync.MappingTemplate.lambdaResult(),
     });
   }
 }

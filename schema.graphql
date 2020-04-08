@@ -1,11 +1,3 @@
-type Game {
-  code: String!
-  createdAt: Int
-  status: GameStatus!
-  type: GameType!
-  players: [Player]
-}
-
 enum GameStatus {
   LOBBY
   INGAME
@@ -15,11 +7,15 @@ enum GameStatus {
 enum GameType {
   TWOROOMSONEBOOM
   GALACTICCONQUEST
+  CODEBREAKERS
 }
 
-type Mutation {
-  createGame(gameType: GameType!): Game!
-  joinGame(code: String!, name: String!): Player!
+type Game {
+  code: String!
+  createdAt: Int
+  status: GameStatus!
+  type: GameType!
+  players: [Player]
 }
 
 type Player {
@@ -28,12 +24,23 @@ type Player {
   code: String
 }
 
+type JoinGameResponse {
+  id: ID!
+  player: Player
+}
+
+type Mutation {
+  createGame(gameType: GameType!): Game!
+  joinGame(code: String!, name: String!): JoinGameResponse!
+}
+
 type Query {
   getGame(code: String!): Game!
 }
 
 type Subscription {
-  playerJoined(code: String!): Player @aws_subscribe(mutations: ["joinGame"])
+  playerJoined(code: String): JoinGameResponse
+    @aws_subscribe(mutations: ["joinGame"])
 }
 
 schema {

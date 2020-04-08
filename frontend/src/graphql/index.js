@@ -26,3 +26,16 @@ export const PLAYER_JOINED = gql`
     }
   }
 `;
+
+export const GET_GAME = gql`
+  query GetGame($code: String!) {
+    getGame(code: $code) {
+      type
+      status
+      players {
+        id
+        name
+      }
+    }
+  }
+`;
