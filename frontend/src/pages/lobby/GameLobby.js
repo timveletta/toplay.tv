@@ -6,13 +6,15 @@ import { PLAYER_JOINED, GET_GAME } from "../../graphql";
 
 import Layout from "../../components/Layout";
 import Card from "../../components/Card";
-import { H2 } from "../../components/Typography";
+import { H2, H4 } from "../../components/Typography";
 import Alert from "../../components/Alert";
+import PlayerLine from "../../components/lobby/PlayerLine";
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 200px minmax(200px, 600px);
   grid-gap: 1rem;
+  align-items: start;
 `;
 
 const Error = styled(Alert.Error)`
@@ -57,6 +59,9 @@ const GameLobby = () => {
   //   return () => playerJoinedSubscription.unsubscribe();
   // }, [id]);
 
+  const getTeam = (teamNumber) =>
+    players.filter((player) => player.team === teamNumber);
+
   return (
     <Layout>
       <Container>
@@ -78,10 +83,23 @@ const GameLobby = () => {
             </GameCodeCard>
             <PlayersCard>
               <H2>Players</H2>
-              {players &&
+              {getGameData.getGame.type === "CODEBREAKERS" ? (
+                <>
+                  <H4>Team 1</H4>
+                  {getTeam(1).map((player) => (
+                    <PlayerLine key={player.id} name={player.name} />
+                  ))}
+                  <H4>Team 2</H4>
+                  {getTeam(2).map((player) => (
+                    <PlayerLine key={player.id} name={player.name} />
+                  ))}
+                </>
+              ) : (
+                players &&
                 players.map((player) => (
-                  <div key={player.id}>{player.name}</div>
-                ))}
+                  <PlayerLine key={player.id} name={player.name} />
+                ))
+              )}
             </PlayersCard>
           </>
         )}

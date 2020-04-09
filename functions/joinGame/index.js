@@ -16,6 +16,24 @@ exports.handler = async function (event) {
     name: playerName,
   };
 
+  const getCurrentGame = async () =>
+    (
+      await dynamoDb
+        .get({
+          TableName,
+          Key: {
+            code: gameCode,
+          },
+        })
+        .promise()
+    ).Item;
+
+  const { type, players } = await getCurrentGame();
+  // if it is a team based game, add teams
+  if (type === "CODEBREAKERS") {
+    playerItem.team = (players.length % 2) + 1;
+  } // TODO else, assign player color
+
   try {
     const params = {
       TableName,
@@ -34,9 +52,11 @@ exports.handler = async function (event) {
     };
 
     const updateResult = await dynamoDb.update(params).promise();
+
     console.log("Update result", updateResult);
+
     return {
-      ...playerItem,
+      player: playerItem,
       code: gameCode,
     };
   } catch (e) {

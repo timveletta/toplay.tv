@@ -10,6 +10,17 @@ enum GameType {
   CODEBREAKERS
 }
 
+enum Color {
+  RED
+  ORANGE
+  YELLOW
+  GREEN
+  TEAL
+  BLUE
+  PURPLE
+  PINK
+}
+
 type Game {
   code: String!
   createdAt: Int
@@ -21,11 +32,12 @@ type Game {
 type Player {
   id: ID!
   name: String!
-  code: String
+  color: Color
+  team: Int
 }
 
 type JoinGameResponse {
-  id: ID!
+  code: String
   player: Player
 }
 

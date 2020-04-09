@@ -1,5 +1,5 @@
 {
-  "appsyncEndpoint": "https://7k7k73vzbvet7nphyewdmye2ae.appsync-api.ap-southeast-2.amazonaws.com/graphql",
+  "appsyncEndpoint": "7k7k73vzbvet7nphyewdmye2ae.appsync-api.ap-southeast-2.amazonaws.com/graphql",
   "apiKey": "da2-7sqhsturere2libttzkgduot4m",
   "region": "ap-southeast-2"
 }

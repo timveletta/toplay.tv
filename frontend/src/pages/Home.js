@@ -54,7 +54,7 @@ const Home = () => {
   return (
     <Layout>
       {joinGameData && (
-        <Redirect to={`lobby/player/${joinGameData.joinGame.name}`} />
+        <Redirect to={`lobby/player/${joinGameData.joinGame.player.name}`} />
       )}
       {createGameData && (
         <Redirect to={`lobby/${createGameData.createGame.code}`} />
