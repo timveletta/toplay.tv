@@ -22,7 +22,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "styled-components": "^5.0.1",
-    "subscriptions-transport-ws": "^0.9.16"
+    "subscriptions-transport-ws": "^0.9.16",
+    "url": "^0.11.0"
   },
   "scripts": {
     "start": "npm run watch:css && react-scripts start",

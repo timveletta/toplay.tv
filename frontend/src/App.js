@@ -8,19 +8,22 @@ import config from "./aws-exports";
 
 import Home from "./pages/Home";
 import Lobby from "./pages/lobby";
+import WebSocketConnector from "./WebSocketConnector";
+
+const webSocketUri = WebSocketConnector({
+  uri: config.appsyncEndpoint,
+  apiKey: config.apiKey,
+});
 
 const wsLink = new WebSocketLink({
-  uri: `ws://${config.appsyncEndpoint}`,
+  uri: webSocketUri,
   options: {
-    reconnect: true,
-    connectionParams: {
-      "x-api-key": config.apiKey,
-    },
+    // reconnect: true,
   },
 });
 
 const client = new ApolloClient({
-  uri: `https://${config.appsyncEndpoint}`,
+  uri: config.appsyncEndpoint,
   headers: {
     "x-api-key": config.apiKey,
   },
