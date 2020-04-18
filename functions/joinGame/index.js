@@ -38,7 +38,6 @@ exports.handler = async function (event) {
     const params = {
       TableName,
       Key: { code: gameCode },
-      ReturnValues: "ALL_NEW",
       UpdateExpression:
         "set #players = list_append(if_not_exists(#players, :empty_list), :player)",
       ExpressionAttributeNames: {
@@ -51,12 +50,15 @@ exports.handler = async function (event) {
       ConditionExpression: "attribute_exists(code)",
     };
 
-    const updateResult = await dynamoDb.update(params).promise();
+    await dynamoDb.update(params).promise();
 
-    console.log("Update result", updateResult);
+    console.log("Return result", {
+      ...playerItem,
+      code: gameCode,
+    });
 
     return {
-      player: playerItem,
+      ...playerItem,
       code: gameCode,
     };
   } catch (e) {

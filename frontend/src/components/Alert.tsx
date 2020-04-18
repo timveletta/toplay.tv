@@ -1,6 +1,10 @@
-import React from "react";
+import React, { FC } from "react";
 
-const Alert = {
+interface IAlert {
+  className?: string;
+}
+
+const Alert: { Error: FC<IAlert>; Warning: FC<IAlert>; Success: FC<IAlert> } = {
   Error: ({ children, ...props }) => (
     <div
       className={`bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 ${props.className}`}

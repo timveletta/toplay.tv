@@ -1,6 +1,6 @@
-import React from "react";
+import React, { FC } from "react";
 
-const Card = ({ children, ...props }) => (
+const Card: FC = ({ children, ...props }) => (
   <div
     {...props}
     className={`max-w rounded overflow-hidden border border-gray-400 p-4`}

@@ -12,10 +12,8 @@ export const JOIN_GAME = gql`
   mutation JoinGame($code: String!, $name: String!) {
     joinGame(code: $code, name: $name) {
       code
-      player {
-        name
-        team
-      }
+      name
+      team
     }
   }
 `;
@@ -23,10 +21,10 @@ export const JOIN_GAME = gql`
 export const PLAYER_JOINED = gql`
   subscription PlayerJoined($code: String!) {
     playerJoined(code: $code) {
-      player {
-        id
-        name
-      }
+      code
+      id
+      name
+      team
     }
   }
 `;

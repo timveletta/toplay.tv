@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useSubscription } from "@apollo/react-hooks";
 import { PLAYER_JOINED, GET_GAME } from "../../graphql";
-
 import Layout from "../../components/Layout";
 import Card from "../../components/Card";
 import { H2, H4 } from "../../components/Typography";
@@ -26,14 +24,18 @@ const GameCodeCard = styled(Card)``;
 const PlayersCard = styled(Card)``;
 
 const GameLobby = () => {
-  let { id } = useParams();
-  const [players, setPlayers] = useState([]);
-  const [error, setError] = useState(null);
+  // TODO replace
+  const id = "TEMP_ID";
+  const [players, setPlayers] = useState<any>([]);
   const {
     loading: getGameLoading,
     data: getGameData,
     error: getGameError,
   } = useQuery(GET_GAME, { variables: { code: id } });
+
+  const { data, loading } = useSubscription(PLAYER_JOINED, {
+    variables: { code: id },
+  });
 
   useEffect(() => {
     if (getGameData) {
@@ -59,8 +61,8 @@ const GameLobby = () => {
   //   return () => playerJoinedSubscription.unsubscribe();
   // }, [id]);
 
-  const getTeam = (teamNumber) =>
-    players.filter((player) => player.team === teamNumber);
+  const getTeam = (teamNumber: number) =>
+    players.filter((player: any) => player.team === teamNumber);
 
   return (
     <Layout>
@@ -83,20 +85,23 @@ const GameLobby = () => {
             </GameCodeCard>
             <PlayersCard>
               <H2>Players</H2>
+              {/* {!loading && data && (
+                <div>Player joined: {data.playerJoined}</div>
+              )} */}
               {getGameData.getGame.type === "CODEBREAKERS" ? (
                 <>
                   <H4>Team 1</H4>
-                  {getTeam(1).map((player) => (
+                  {getTeam(1).map((player: any) => (
                     <PlayerLine key={player.id} name={player.name} />
                   ))}
                   <H4>Team 2</H4>
-                  {getTeam(2).map((player) => (
+                  {getTeam(2).map((player: any) => (
                     <PlayerLine key={player.id} name={player.name} />
                   ))}
                 </>
               ) : (
                 players &&
-                players.map((player) => (
+                players.map((player: any) => (
                   <PlayerLine key={player.id} name={player.name} />
                 ))
               )}

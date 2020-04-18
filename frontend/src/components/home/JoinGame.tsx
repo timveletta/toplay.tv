@@ -1,15 +1,22 @@
-import React from "react";
+import React, { FC } from "react";
 import styled from "styled-components";
 import Input from "../Input";
 import Button from "../Button";
 import Card from "../Card";
 import Alert from "../Alert";
+import { useForm } from "react-hook-form";
 
 const JoinButton = styled(Button)`
   width: 100%;
 `;
 
-const JoinGame = ({ register, isLoading, isError }) => {
+interface IJoinGame {
+  register: ReturnType<typeof useForm>["register"];
+  isLoading: boolean;
+  isError: boolean;
+}
+
+const JoinGame: FC<IJoinGame> = ({ register, isLoading, isError }) => {
   return (
     <Card>
       {isError && <Alert.Error>Game code not found.</Alert.Error>}

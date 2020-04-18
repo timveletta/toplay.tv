@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { CREATE_GAME, JOIN_GAME } from "../graphql";
-import { Redirect } from "react-router-dom";
 import { useMutation } from "@apollo/react-hooks";
 import Button from "../components/Button";
 import Layout from "../components/Layout";
 import JoinGame from "../components/home/JoinGame";
 import Alert from "../components/Alert";
+import { useGameState } from "../context/GameState";
 
 const Container = styled.div`
   max-width: 800px;
@@ -20,8 +20,14 @@ const Error = styled(Alert.Error)`
   grid-column: span 2;
 `;
 
+interface IJoinGameForm {
+  name: string;
+  code: string;
+}
+
 const Home = () => {
-  const { register, handleSubmit } = useForm();
+  const [gameState, setGameState] = useGameState();
+  const { register, handleSubmit } = useForm<IJoinGameForm>();
   const [
     createGameMutation,
     {
@@ -35,30 +41,26 @@ const Home = () => {
     { data: joinGameData, loading: joinGameLoading, error: joinGameError },
   ] = useMutation(JOIN_GAME);
 
-  const onCreateGame = async () => {
-    try {
-      await createGameMutation({ variables: { gameType: "CODEBREAKERS" } });
-    } catch (e) {
-      console.error(e);
-    }
+  const onCreateGame = () => {
+    createGameMutation({ variables: { gameType: "CODEBREAKERS" } });
   };
 
-  const onJoinGame = async (data) => {
-    try {
-      await joinGameMutation({ variables: data });
-    } catch (e) {
-      console.error(e);
-    }
+  const onJoinGame = (data: IJoinGameForm) => {
+    joinGameMutation({ variables: data });
   };
+
+  useEffect(() => {
+    if (createGameData || joinGameData) {
+      setGameState((prev) => ({
+        ...prev,
+        state: "LOBBY",
+        isPlayer: !createGameData && joinGameData,
+      }));
+    }
+  }, [createGameData]);
 
   return (
     <Layout>
-      {joinGameData && (
-        <Redirect to={`lobby/player/${joinGameData.joinGame.player.name}`} />
-      )}
-      {createGameData && (
-        <Redirect to={`lobby/${createGameData.createGame.code}`} />
-      )}
       <Container>
         {createGameError && (
           <Error>Game could not be created, please try again later.</Error>
@@ -70,7 +72,7 @@ const Home = () => {
           <JoinGame
             register={register}
             isLoading={createGameLoading || joinGameLoading}
-            isError={joinGameError}
+            isError={Boolean(joinGameError)}
           />
         </form>
       </Container>

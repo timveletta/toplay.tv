@@ -1,6 +1,10 @@
-import React from "react";
+import React, { FC } from "react";
 
-const PlayerLine = ({ name, ...props }) => {
+interface IPlayerLine {
+  name: string;
+}
+
+const PlayerLine: FC<IPlayerLine> = ({ name }) => {
   return (
     <div className="bg-red-400 text-white font-bold rounded-md p-4 mb-4">
       {name}

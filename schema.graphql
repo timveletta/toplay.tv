@@ -30,20 +30,16 @@ type Game {
 }
 
 type Player {
-  id: ID!
+  id: String!
   name: String!
   color: Color
   team: Int
-}
-
-type JoinGameResponse {
   code: String
-  player: Player
 }
 
 type Mutation {
   createGame(gameType: GameType!): Game!
-  joinGame(code: String!, name: String!): JoinGameResponse!
+  joinGame(code: String!, name: String!): Player!
 }
 
 type Query {
@@ -51,8 +47,7 @@ type Query {
 }
 
 type Subscription {
-  playerJoined(code: String): JoinGameResponse
-    @aws_subscribe(mutations: ["joinGame"])
+  playerJoined(code: String): Player @aws_subscribe(mutations: ["joinGame"])
 }
 
 schema {
