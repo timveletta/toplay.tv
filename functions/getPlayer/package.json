@@ -1,5 +1,5 @@
 {
-  "name": "@toplay/create-game",
+  "name": "@toplay/get-player",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,6 @@
   "author": "Tim Veletta",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.624.0",
-    "uuid": "^7.0.3"
+    "aws-sdk": "^2.624.0"
   }
 }

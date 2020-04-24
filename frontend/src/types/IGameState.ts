@@ -1,4 +1,8 @@
+import IPlayer from "./IPlayer";
+
 export default interface IGameState {
-  state: "NOT_IN_GAME" | "LOBBY";
+  gameId?: string;
   isPlayer: boolean;
+  player?: IPlayer;
+  status: "NOT_IN_GAME" | "LOBBY";
 }

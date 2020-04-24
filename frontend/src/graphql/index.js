@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 export const CREATE_GAME = gql`
   mutation CreateGame($gameType: GameType!) {
     createGame(gameType: $gameType) {
-      code
+      id
     }
   }
 `;
@@ -11,17 +11,16 @@ export const CREATE_GAME = gql`
 export const JOIN_GAME = gql`
   mutation JoinGame($code: String!, $name: String!) {
     joinGame(code: $code, name: $name) {
-      code
+      id
+      gameId
       name
-      team
     }
   }
 `;
 
 export const PLAYER_JOINED = gql`
-  subscription PlayerJoined($code: String!) {
-    playerJoined(code: $code) {
-      code
+  subscription PlayerJoined($gameId: ID!) {
+    playerJoined(gameId: $gameId) {
       id
       name
       team
@@ -30,15 +29,26 @@ export const PLAYER_JOINED = gql`
 `;
 
 export const GET_GAME = gql`
-  query GetGame($code: String!) {
-    getGame(code: $code) {
+  query GetGame($id: ID!) {
+    getGame(id: $id) {
+      code
       type
-      status
+      state {
+        status
+      }
       players {
         id
         name
         team
       }
+    }
+  }
+`;
+
+export const GET_PLAYER = gql`
+  query GetPlayer($id: ID!, $gameId: ID!) {
+    getPlayer(id: $id, gameId: $gameId) {
+      name
     }
   }
 `;

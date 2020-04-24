@@ -7,9 +7,10 @@ import React, {
   SetStateAction,
 } from "react";
 import IGameState from "../types/IGameState";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 const initialState: IGameState = {
-  state: "NOT_IN_GAME",
+  status: "NOT_IN_GAME",
   isPlayer: false,
 };
 
@@ -26,7 +27,16 @@ const useGameState = () => {
 };
 
 const GameStateProvider = ({ ...props }) => {
-  const [gameState, setGameState] = useState<IGameState>(initialState);
+  const localStorage = useLocalStorage();
+  const [gameState, setGameState] = useState<IGameState>({
+    ...initialState,
+    gameId: localStorage.get("gameId"),
+    player: {
+      id: localStorage.get("playerId"),
+    },
+    status: Boolean(localStorage.get("gameId")) ? "LOBBY" : "NOT_IN_GAME", // TODO fix to reflect returning to game using Suspense component
+    isPlayer: Boolean(localStorage.get("playerId")),
+  });
   const value: GameStateType = useMemo(() => [gameState, setGameState], [
     gameState,
   ]);

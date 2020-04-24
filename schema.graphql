@@ -21,33 +21,48 @@ enum Color {
   PINK
 }
 
+type GameState {
+  status: GameStatus!
+}
+
 type Game {
+  id: ID!
   code: String!
   createdAt: Int
-  status: GameStatus!
   type: GameType!
+  state: GameState!
   players: [Player]
 }
 
 type Player {
-  id: String!
+  id: ID!
+  gameId: ID!
   name: String!
   color: Color
   team: Int
-  code: String
+}
+
+input PlayerInput {
+  color: Color
+  team: Int
 }
 
 type Mutation {
   createGame(gameType: GameType!): Game!
   joinGame(code: String!, name: String!): Player!
+  # updateGame(id: ID!, input: GameInput!): Game!
+  updatePlayer(id: ID!, gameId: ID!, input: PlayerInput!): Player!
 }
 
 type Query {
-  getGame(code: String!): Game!
+  getGame(id: ID!): Game!
+  getPlayer(id: ID!, gameId: ID!): Player!
 }
 
 type Subscription {
-  playerJoined(code: String): Player @aws_subscribe(mutations: ["joinGame"])
+  playerJoined(gameId: ID!): Player @aws_subscribe(mutations: ["joinGame"])
+  playerUpdated(gameId: ID!): Player @aws_subscribe(mutations: ["updatePlayer"])
+  # gameUpdated(gameId: ID!): Game! @aws_subscribe(mutations: ["updateGame"])
 }
 
 schema {

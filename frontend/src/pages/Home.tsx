@@ -8,6 +8,7 @@ import Layout from "../components/Layout";
 import JoinGame from "../components/home/JoinGame";
 import Alert from "../components/Alert";
 import { useGameState } from "../context/GameState";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 const Container = styled.div`
   max-width: 800px;
@@ -26,7 +27,9 @@ interface IJoinGameForm {
 }
 
 const Home = () => {
-  const [gameState, setGameState] = useGameState();
+  const localStorage = useLocalStorage();
+  // eslint-disable-next-line
+  const [_, setGameState] = useGameState();
   const { register, handleSubmit } = useForm<IJoinGameForm>();
   const [
     createGameMutation,
@@ -42,7 +45,9 @@ const Home = () => {
   ] = useMutation(JOIN_GAME);
 
   const onCreateGame = () => {
-    createGameMutation({ variables: { gameType: "CODEBREAKERS" } });
+    createGameMutation({
+      variables: { gameType: "CODEBREAKERS" },
+    });
   };
 
   const onJoinGame = (data: IJoinGameForm) => {
@@ -50,14 +55,34 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (createGameData || joinGameData) {
+    if (createGameData) {
+      const { id } = createGameData.createGame;
+      localStorage.set("gameId", id);
       setGameState((prev) => ({
         ...prev,
         state: "LOBBY",
-        isPlayer: !createGameData && joinGameData,
+        isPlayer: false,
+        gameId: id,
       }));
     }
-  }, [createGameData]);
+  }, [createGameData, localStorage, setGameState]);
+
+  useEffect(() => {
+    if (joinGameData) {
+      const { gameId, id } = joinGameData.joinGame;
+      localStorage.set("gameId", gameId);
+      localStorage.set("playerId", id);
+      setGameState((prev) => ({
+        ...prev,
+        state: "LOBBY",
+        isPlayer: true,
+        gameId,
+        player: {
+          id,
+        },
+      }));
+    }
+  }, [joinGameData, localStorage, setGameState]);
 
   return (
     <Layout>
@@ -65,7 +90,10 @@ const Home = () => {
         {createGameError && (
           <Error>Game could not be created, please try again later.</Error>
         )}
-        <Button disabled={createGameLoading} onClick={onCreateGame}>
+        <Button
+          disabled={createGameLoading || joinGameLoading}
+          onClick={onCreateGame}
+        >
           Create Game
         </Button>
         <form autoComplete="off" onSubmit={handleSubmit(onJoinGame)}>

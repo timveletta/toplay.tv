@@ -15,10 +15,18 @@ export class ApiStack extends cdk.Stack {
     this.gameTable = new DynamoDb.Table(this, "GameTable", {
       tableName: "ToPlayTv-Games",
       partitionKey: {
-        name: "code",
+        name: "id",
         type: DynamoDb.AttributeType.STRING,
       },
       billingMode: DynamoDb.BillingMode.PAY_PER_REQUEST,
+    });
+
+    this.gameTable.addGlobalSecondaryIndex({
+      indexName: "gameCodeGSI",
+      partitionKey: {
+        name: "code",
+        type: DynamoDb.AttributeType.STRING,
+      },
     });
 
     this.graphQLApi = new AppSync.GraphQLApi(this, "ToPlayTvApi", {
@@ -31,7 +39,9 @@ export class ApiStack extends cdk.Stack {
 
     this.createLambdaResolver("createGame", "Mutation");
     this.createLambdaResolver("joinGame", "Mutation");
+    this.createLambdaResolver("updatePlayer", "Mutation");
     this.createLambdaResolver("getGame", "Query");
+    this.createLambdaResolver("getPlayer", "Query");
   }
 
   createLambdaResolver(fieldName: string, type: "Mutation" | "Query") {

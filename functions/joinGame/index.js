@@ -2,6 +2,7 @@ const AWS = require("aws-sdk");
 const uuidv4 = require("uuid").v4;
 
 const TableName = "ToPlayTv-Games";
+const IndexName = "gameCodeGSI";
 
 if (typeof dynamoDb === "undefined") {
   var dynamoDb = new AWS.DynamoDB.DocumentClient();
@@ -11,57 +12,65 @@ exports.handler = async function (event) {
   const gameCode = event.code.toLowerCase();
   const playerName = event.name;
 
+  const playerId = uuidv4();
   const playerItem = {
-    id: uuidv4(),
     name: playerName,
   };
 
-  const getCurrentGame = async () =>
-    (
-      await dynamoDb
-        .get({
-          TableName,
-          Key: {
-            code: gameCode,
-          },
-        })
-        .promise()
-    ).Item;
+  const getGameId = async () => {
+    const result = await dynamoDb
+      .query({
+        TableName,
+        IndexName,
+        KeyConditionExpression: "code = :code",
+        ExpressionAttributeValues: {
+          ":code": gameCode,
+        },
+      })
+      .promise();
 
-  const { type, players } = await getCurrentGame();
-  // if it is a team based game, add teams
-  if (type === "CODEBREAKERS") {
-    playerItem.team = (players.length % 2) + 1;
-  } // TODO else, assign player color
+    console.log("Get game result: ", result);
+
+    if (result.Items.length === 0) {
+      return `Could not find the game with code ${gameCode}.`;
+    }
+
+    return result.Items[0];
+  };
+
+  const { id } = await getGameId();
 
   try {
     const params = {
       TableName,
-      Key: { code: gameCode },
-      UpdateExpression:
-        "set #players = list_append(if_not_exists(#players, :empty_list), :player)",
+      Key: { id },
+      UpdateExpression: "set players.#playerId = :player",
       ExpressionAttributeNames: {
-        "#players": "players",
+        "#playerId": playerId,
       },
       ExpressionAttributeValues: {
-        ":player": [playerItem],
-        ":empty_list": [],
+        ":player": playerItem,
       },
-      ConditionExpression: "attribute_exists(code)",
+      ConditionExpression: "attribute_not_exists(players.#playerId)",
     };
 
     await dynamoDb.update(params).promise();
 
-    console.log("Return result", {
+    console.log("Result: ", {
       ...playerItem,
       code: gameCode,
+      gameId: id,
+      id: playerId,
     });
 
     return {
       ...playerItem,
       code: gameCode,
+      gameId: id,
+      id: playerId,
     };
   } catch (e) {
-    return `Could not find the game with code ${gameCode}.`;
+    console.log("Cannot add player to game. ID: ", id);
+    return `Cannot add player to the game with code ${gameCode}.`;
   }
 };

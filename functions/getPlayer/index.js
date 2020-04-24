@@ -7,22 +7,22 @@ if (typeof dynamoDb === "undefined") {
 }
 
 exports.handler = async function (event) {
-  const id = event.id;
+  const { id, gameId } = event;
 
   const params = {
     TableName,
     Key: {
-      id,
+      id: gameId,
     },
   };
 
   const { Item } = await dynamoDb.get(params).promise();
 
-  return {
-    ...Item,
-    players: Object.keys(Item.players).map((playerId) => ({
-      id: playerId,
-      ...Item.players[playerId],
-    })),
-  };
+  console.log("input", id, gameId, "result", Item);
+
+  const player = Item.players[id];
+
+  return player
+    ? player
+    : `Cannot find player with ID ${id} on game with ID ${gameId}`;
 };

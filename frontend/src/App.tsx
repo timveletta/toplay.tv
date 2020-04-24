@@ -9,9 +9,9 @@ import { createSubscriptionHandshakeLink } from "aws-appsync-subscription-link";
 
 import config from "./aws-exports.json";
 
-import GameStateProvider, { useGameState } from "./context/GameState";
+import GameStateProvider from "./context/GameState";
 
-import Home from "./pages/Home";
+import Router from "./pages/Router";
 
 const wsLink = createSubscriptionHandshakeLink({
   url: config.appsyncEndpoint,
@@ -42,13 +42,10 @@ const client = new ApolloClient({
 });
 
 function App() {
-  const [{ state }] = useGameState();
-
   return (
     <ApolloProvider client={client}>
       <GameStateProvider>
-        {state === "NOT_IN_GAME" && <Home />}
-        {/* {state === "LOBBY" && <Lobby />} */}
+        <Router />
       </GameStateProvider>
     </ApolloProvider>
   );
