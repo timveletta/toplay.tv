@@ -1,1 +1,6 @@
-{}
+{
+  "CODEBREAKERS": {
+    "isTeamBased": true,
+    "minPlayers": 4
+  }
+}

@@ -24,6 +24,18 @@ export const PLAYER_JOINED = gql`
       id
       name
       team
+      color
+    }
+  }
+`;
+
+export const PLAYER_UPDATED = gql`
+  subscription PlayerUpdated($gameId: ID!) {
+    playerUpdated(gameId: $gameId) {
+      id
+      name
+      team
+      color
     }
   }
 `;
@@ -40,7 +52,16 @@ export const GET_GAME = gql`
         id
         name
         team
+        color
       }
+    }
+  }
+`;
+
+export const GET_GAME_AS_PLAYER = gql`
+  query GetGame($id: ID!) {
+    getGame(id: $id) {
+      type
     }
   }
 `;
@@ -49,6 +70,20 @@ export const GET_PLAYER = gql`
   query GetPlayer($id: ID!, $gameId: ID!) {
     getPlayer(id: $id, gameId: $gameId) {
       name
+      team
+      color
+    }
+  }
+`;
+
+export const UPDATE_PLAYER = gql`
+  mutation UpdatePlayer($id: ID!, $gameId: ID!, $input: PlayerInput!) {
+    updatePlayer(id: $id, gameId: $gameId, input: $input) {
+      id
+      gameId
+      name
+      team
+      color
     }
   }
 `;

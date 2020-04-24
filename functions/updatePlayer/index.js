@@ -40,7 +40,11 @@ exports.handler = async function (event) {
 
   const { Attributes } = await dynamoDb.update(params).promise();
 
-  const player = Attributes.players[id];
+  const player = {
+    ...Attributes.players[id],
+    id,
+    gameId,
+  };
 
   return player
     ? player

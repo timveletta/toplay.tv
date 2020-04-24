@@ -58,9 +58,10 @@ const Home = () => {
     if (createGameData) {
       const { id } = createGameData.createGame;
       localStorage.set("gameId", id);
+      debugger;
       setGameState((prev) => ({
         ...prev,
-        state: "LOBBY",
+        status: "LOBBY",
         isPlayer: false,
         gameId: id,
       }));
@@ -74,7 +75,7 @@ const Home = () => {
       localStorage.set("playerId", id);
       setGameState((prev) => ({
         ...prev,
-        state: "LOBBY",
+        status: "LOBBY",
         isPlayer: true,
         gameId,
         player: {
@@ -91,6 +92,7 @@ const Home = () => {
           <Error>Game could not be created, please try again later.</Error>
         )}
         <Button
+          color="primary"
           disabled={createGameLoading || joinGameLoading}
           onClick={onCreateGame}
         >

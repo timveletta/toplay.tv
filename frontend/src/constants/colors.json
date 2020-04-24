@@ -1,0 +1,11 @@
+{
+  "RED": "bg-red-600",
+  "ORANGE": "bg-orange-600",
+  "YELLOW": "bg-yellow-600",
+  "GREEN": "bg-green-600",
+  "TEAL": "bg-teal-600",
+  "BLUE": "bg-blue-600",
+  "PURPLE": "bg-purple-600",
+  "PINK": "bg-pink-600",
+  "GREY": "bg-gray-600"
+}
